@@ -1,34 +1,24 @@
-# BELS 2026 · The Journey — website
+# BELS 2026 – Bandung Entrepreneurs Literacy Symposium
 
-Landing page for **Simposium Literasi Kewirausahaan Bandung 2026** (Kamis, 26 November 2026, Microlibrary Asia Afrika).
-Static site: plain HTML/CSS/JS, no build step.
+Situs statis (HTML/CSS/JS, tanpa build) untuk landing page, sales page, dan registrasi BELS 2026 (Kamis, 26 November 2026, Microlibrary Alun-alun Bandung). Data pendaftaran masuk ke Google Sheets lewat Google Apps Script.
 
 ```
-index.html            page content (Bahasa Indonesia)
-assets/css/style.css  visual identity (provisional Freezehotly palette)
-assets/js/config.js   go-live facts: registration link, price, WhatsApp, speakers R3/R4, seat counter
-assets/js/main.js     countdown, Founder Compass self-check, config wiring
+index.html        halaman lengkap (landing, sales, form, layar sukses, FAQ)
+config.js         satu-satunya file untuk WA, rekening, mitra, dan URL Apps Script
+fonts/            Francy, Old Money Script, Azeret Mono, Blauer Nue
+assets/           logo
+apps-script/      Code.gs: kode registrasi, kuota, pelepasan 24 jam, Kode Peserta
+archive/          halaman versi lama (11 Nov 2026), tidak ikut dideploy
 ```
 
-## Content gate (from the GTM Plan)
-Public pages show only what is CONFIRMED. Until a value is decided, leave it `null` in `assets/js/config.js`:
+## Konfigurasi (`config.js`)
+`API_URL` (URL web app Apps Script), `WA_NUMBER`, `BANK` (isi `isDummy: false` setelah rekening asli), `SPONSORS`, `PARTNERS`. Selama `BANK.isDummy` bernilai `true`, halaman menampilkan banner pratinjau dan layar sukses memberi peringatan.
 
-| Field | Shows when set | Hidden / neutral when `null` |
-|---|---|---|
-| `registrationUrl` | All "Daftar" buttons open the form | "Pendaftaran segera dibuka" |
-| `price` | "Rp100.000 / orang" | "Harga diumumkan saat pendaftaran dibuka" |
-| `registrationCloses` | Close date on the ticket | hidden |
-| `seatsRemaining` | Seat counter in the hero | hidden |
-| `whatsapp` | WhatsApp buttons | hidden |
-| `speakers.r3`, `speakers.r4` | Name on the room card | "Pemandu segera diumumkan" |
-| `showNeon` | Neon-sign closing moment | hidden |
+## Apps Script
+Lihat `apps-script/Code.gs`. Ikatkan ke Google Sheet registrasi, jalankan `setupBELS()` sekali, lalu Deploy > Web app (Execute as: Me, Access: Anyone) dan tempel URL `/exec` ke `API_URL`.
 
-Deliberately **not** on the site until confirmed in writing: sponsor names, the Mayor's or Kadisarpus' attendance, media partners, menu brands.
-
-## Run locally
-```
-python3 -m http.server 8000   # then open http://localhost:8000
-```
-
-## Deploy
-Any static host works. GitHub Pages: Settings → Pages → deploy from branch, root folder (`.nojekyll` included).
+## Go-public checklist
+- [ ] Rekening asli dan nomor WA panitia di `config.js`, `isDummy: false`
+- [ ] Hapus `<meta name="robots">` di `index.html` dan header `X-Robots-Tag` di `vercel.json`
+- [ ] Hapus data uji di Sheet (menu BELS > Hapus data uji dan reset nomor)
+- [ ] Hanya sponsor, mitra, dan pembicara yang sudah dikonfirmasi tampil
